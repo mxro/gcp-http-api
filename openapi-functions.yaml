@@ -1,0 +1,21 @@
+swagger: '2.0'
+info:
+  title: gcp-http-api
+  description: Example HTTP API with GCP and Go 
+  version: 1.0.0
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /hello:
+    get:
+      summary: Greet a user
+      operationId: hello
+      x-google-backend:
+        address: https://gcp-http-api.cloudfunctions.net/helloGET
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
