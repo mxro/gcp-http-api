@@ -23,6 +23,7 @@ gcloud services enable cloudfunctions.googleapis.com
 gcloud services enable cloudbuild.googleapis.com
 gcloud services enable artifactregistry.googleapis.com
 gcloud services enable run.googleapis.com
+gcloud services enable compute.googleapis.com
 gcloud services enable servicemanagement.googleapis.com
 gcloud services enable servicecontrol.googleapis.com
 ```
@@ -102,6 +103,66 @@ gcloud compute ssl-certificates create gcp-http-api \
 gcloud compute ssl-certificates list \
    --global
 ```
+
+## Create NEG
+
+https://cloud.google.com/api-gateway/docs/gateway-serverless-neg
+
+```
+gcloud beta compute network-endpoint-groups create gcp-http-api-neg \
+  --region=us-central1 \
+  --network-endpoint-type=serverless \
+  --serverless-deployment-platform=apigateway.googleapis.com \
+  --serverless-deployment-resource=gcp-http-api-gateway
+```
+
+## Create Backend Service
+
+```
+gcloud compute backend-services create gcp-http-api-backend-service --global
+```
+
+Link NEG
+
+```
+gcloud compute backend-services add-backend gcp-http-api-backend-service \
+  --global \
+  --network-endpoint-group=gcp-http-api-neg  \
+  --network-endpoint-group-region=us-central1
+```
+
+## Create URL Map
+
+```
+gcloud compute url-maps create gcp-http-api-map \
+  --default-service gcp-http-api-backend-service
+```
+
+## Create HTTPs proxy
+
+```
+gcloud compute target-https-proxies create gcp-http-api-proxy \
+  --ssl-certificates=gcp-http-api \
+  --url-map=gcp-http-api-map
+```
+
+## Create Forwarding Rule
+
+```
+gcloud compute forwarding-rules create gcp-http-api-forwarding \
+  --target-https-proxy=gcp-http-api-proxy \
+  --global \
+  --ports=443
+```
+
+Get IP Address
+
+```
+gcloud compute forwarding-rules list
+```
+---
+
+Not verified stuff:
 
 ## Create Load Balancer
 
