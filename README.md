@@ -33,7 +33,11 @@ gcloud services enable servicecontrol.googleapis.com
 gcloud functions deploy hello-http --gen2 --runtime=go119 --source=functions/hello  --entry-point=hello-http --region=us-central1 --trigger-http --allow-unauthenticated 
 ```
 
+Deployed to: https://hello-http-55wgnx34ra-uc.a.run.app
+
 ## Create API Gateway
+
+https://cloud.google.com/api-gateway/docs/secure-traffic-gcloud
 
 ```
 gcloud api-gateway apis create gcp-http-api
@@ -45,6 +49,43 @@ Describe API:
 gcloud api-gateway apis describe gcp-http-api
 ```
 
+Create YAML `openapi-functions.yaml`
+
+```
+gcloud api-gateway api-configs create gcp-http-api-config \
+  --api=gcp-http-api --openapi-spec=openapi-functions.yaml 
+```
+
+
+Create gateway - gateway defines external URL
+
+```
+gcloud api-gateway gateways create gcp-http-api-gateway \
+  --api=gcp-http-api --api-config=gcp-http-api-config \
+  --location=us-central1
+```
+
+Describe gateway
+
+```
+gcloud api-gateway gateways describe gcp-http-api-gateway \
+  --location=us-central1 
+```
+
+Get URL to access function:
+
+```
+https://gcp-http-api-gateway-7vbvujrw.uc.gateway.dev/hello
+```
+
+To update create a new config and then update gateway:
+
+```
+gcloud api-gateway api-configs create gcp-http-api-config-v2 \
+  --api=gcp-http-api --openapi-spec=openapi-functions.yaml 
+
+gcloud api-gateway gateways update gcp-http-api-gateway --api=gcp-http-api --api-config=gcp-http-api-config-v2 --location=us-central1 
+```
 
 ## Create Certificate
 
