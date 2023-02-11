@@ -15,7 +15,7 @@ func init() {
 
 var htmlTemplate = `<html>
   <head>
-    <title>Hello from Go (v2)</title>
+    <title>Hello from Go (with API Gateway)</title>
 	</head>
 	<body>
 		<p>Hello there!</p>

@@ -160,53 +160,7 @@ Get IP Address
 ```
 gcloud compute forwarding-rules list
 ```
----
 
-Not verified stuff:
+## Access Page
 
-## Create Load Balancer
-
-Create IP address
-
-```
-gcloud compute addresses create lb-ipv4-1 \
-    --ip-version=IPV4 \
-    --network-tier=PREMIUM \
-    --global
-```
-
-Get IP address
-
-```
-gcloud compute addresses describe lb-ipv4-1 \
-    --format="get(address)" \
-    --global
-
-> 34.160.117.203
-```
-
-Create health check
-
-```
-  gcloud compute health-checks create http http-basic-check \
-      --port 80
-
-> health check name: http-basic-check
-```
-
-Create URL MAP
-
-```
-  gcloud compute url-maps create web-map-http \
-      --default-service web-backend-service
-  
-```
-
-Set SSL certificate
-
-```
-gcloud compute target-https-proxies update TARGET_PROXY_NAME \
-    --ssl-certificates gcp-http-api \
-    --global-ssl-certificates \
-    --global
-```
+Go to the URL: https://gcp-api.examples.mxro.de/hello
